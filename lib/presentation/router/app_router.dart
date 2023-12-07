@@ -1,3 +1,5 @@
+import 'package:e_bike_pl/presentation/pages/home_page.dart';
+import 'package:e_bike_pl/presentation/pages/splash_page.dart';
 import 'package:flutter/material.dart';
 
 class AppRouter {
@@ -5,19 +7,11 @@ class AppRouter {
     switch (settings.name) {
       case '/':
         return MaterialPageRoute(
-          builder: (_) => const Scaffold(
-            body: Center(
-              child: Text('Home'),
-            ),
-          ),
+          builder: (_) => const SplashPage(),
         );
-      case '/login':
+      case HomePage.routeName:
         return MaterialPageRoute(
-          builder: (_) => const Scaffold(
-            body: Center(
-              child: Text('Login'),
-            ),
-          ),
+          builder: (_) => const HomePage(),
         );
       default:
         return MaterialPageRoute(

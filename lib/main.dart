@@ -1,4 +1,5 @@
 import 'package:e_bike_pl/presentation/router/app_router.dart';
+import 'package:e_bike_pl/presentation/theme/theme_constants.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -14,7 +15,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'E-bike Polinema',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        colorScheme: ColorScheme.fromSeed(seedColor: ThemeConstants.primaryBlue),
         useMaterial3: true,
       ),
       onGenerateRoute: AppRouter.onGenerateRoute,
