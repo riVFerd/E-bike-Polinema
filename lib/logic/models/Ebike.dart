@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 class Ebike {
   final String id;
   final String name;
@@ -14,6 +16,14 @@ class Ebike {
       id: json['id'] as String,
       name: json['name'] as String,
       isAvailable: json['isAvailable'] as bool,
+    );
+  }
+
+  factory Ebike.fromSnapshot(DocumentSnapshot snapshot) {
+    return Ebike(
+      id: snapshot.id,
+      name: snapshot.get('name') as String,
+      isAvailable: snapshot.get('isAvailable') as bool,
     );
   }
 

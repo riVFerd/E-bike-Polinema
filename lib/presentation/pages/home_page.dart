@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:e_bike_pl/presentation/theme/theme_constants.dart';
 import 'package:flutter/material.dart';
@@ -10,20 +11,10 @@ class HomePage extends StatelessWidget {
 
   const HomePage({super.key});
 
-  // Dummy data
-  static const List<Ebike> dummyEbikeList = [
-    Ebike(id: '1', name: 'Ebike 1', isAvailable: true),
-    Ebike(id: '2', name: 'Ebike 2', isAvailable: false),
-    Ebike(id: '3', name: 'Ebike 3', isAvailable: true),
-    Ebike(id: '4', name: 'Ebike 4', isAvailable: false),
-    Ebike(id: '5', name: 'Ebike 5', isAvailable: true),
-    Ebike(id: '6', name: 'Ebike 6', isAvailable: false),
-    Ebike(id: '7', name: 'Ebike 7', isAvailable: true),
-    // Add more instances as needed
-  ];
-
   @override
   Widget build(BuildContext context) {
+    final ebikeCollection = FirebaseFirestore.instance.collection('ebike');
+
     return Scaffold(
         appBar: AppBar(
           centerTitle: true,
@@ -51,10 +42,23 @@ class HomePage extends StatelessWidget {
                       color: ThemeConstants.primaryBlue.withOpacity(0.5),
                       dashPattern: const [16, 4],
                       radius: const Radius.circular(8),
-                      child: SingleChildScrollView(
-                        child: Column(
-                          children: dummyEbikeList.map((e) => EbikeCard(ebike: e)).toList(),
-                        ),
+                      child: StreamBuilder(
+                        stream: ebikeCollection.snapshots(),
+                        builder: (context, snapshot) {
+                          if (!snapshot.hasData) {
+                            return const Center(
+                              child: CircularProgressIndicator(),
+                            );
+                          } else {
+                            return ListView.builder(
+                              itemCount: snapshot.data!.docs.length,
+                              itemBuilder: (context, index) {
+                                final ebike = Ebike.fromSnapshot(snapshot.data!.docs[index]);
+                                return EbikeCard(ebike: ebike);
+                              },
+                            );
+                          }
+                        },
                       ),
                     ),
                   ),
