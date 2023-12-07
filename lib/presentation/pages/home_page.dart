@@ -13,7 +13,7 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final ebikeCollection = FirebaseFirestore.instance.collection('ebike');
+    final ebikeCollection = FirebaseFirestore.instance.collection('ebike').orderBy('name');
 
     return Scaffold(
         appBar: AppBar(

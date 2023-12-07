@@ -1,3 +1,4 @@
+import 'package:e_bike_pl/presentation/pages/management_vehicle_page.dart';
 import 'package:flutter/material.dart';
 
 import '../../logic/models/Ebike.dart';
@@ -15,7 +16,9 @@ class EbikeCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
+      clipBehavior: Clip.hardEdge,
       height: 120,
+      margin: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
@@ -23,37 +26,47 @@ class EbikeCard extends StatelessWidget {
           width: 3,
         ),
       ),
-      margin: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
-          Image.asset('assets/ebike-polinema.png'),
-          Container(
-            width: 1,
-            margin: const EdgeInsets.symmetric(vertical: 16),
-            height: double.infinity,
-            color: ThemeConstants.primaryBlue.withOpacity(0.3),
-          ),
-          Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.start,
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          onTap: () {
+            Navigator.of(context).pushNamed(
+              ManagementVehiclePage.routeName,
+              arguments: ebike,
+            );
+          },
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              Text(ebike.name),
-              const SizedBox(height: 8),
-              Row(
+              Image.asset('assets/ebike-polinema.png'),
+              Container(
+                width: 1,
+                margin: const EdgeInsets.symmetric(vertical: 16),
+                height: double.infinity,
+                color: ThemeConstants.primaryBlue.withOpacity(0.3),
+              ),
+              Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text('Status: '),
-                  Text(ebike.isAvailable ? 'Tersedia' : 'Digunakan'),
-                  const SizedBox(width: 8),
-                  Icon(
-                    Icons.circle,
-                    color: ebike.isAvailable ? Colors.green : Colors.red,
-                  ),
+                  Text(ebike.name),
+                  const SizedBox(height: 8),
+                  Row(
+                    children: [
+                      const Text('Status: '),
+                      Text(ebike.isAvailable ? 'Tersedia' : 'Digunakan'),
+                      const SizedBox(width: 8),
+                      Icon(
+                        Icons.circle,
+                        color: ebike.isAvailable ? Colors.green : Colors.red,
+                      ),
+                    ],
+                  )
                 ],
-              )
+              ),
             ],
           ),
-        ],
+        ),
       ),
     );
   }
