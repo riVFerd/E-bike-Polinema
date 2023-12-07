@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "445508830089",
+    "project_id": "e-bike-polinema",
+    "storage_bucket": "e-bike-polinema.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:445508830089:android:41c42315a06630709bd758",
+        "android_client_info": {
+          "package_name": "com.example.e_bike_pl"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCHGXAd9d46fqO9WQQ3KbJX71soxtKqgDM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

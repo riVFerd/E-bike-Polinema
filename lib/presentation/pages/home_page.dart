@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:e_bike_pl/presentation/theme/theme_constants.dart';
 import 'package:flutter/material.dart';
@@ -24,6 +25,8 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final ebikeCollection = FirebaseFirestore.instance.collection('ebike');
+
     return Scaffold(
         appBar: AppBar(
           centerTitle: true,
@@ -51,10 +54,23 @@ class HomePage extends StatelessWidget {
                       color: ThemeConstants.primaryBlue.withOpacity(0.5),
                       dashPattern: const [16, 4],
                       radius: const Radius.circular(8),
-                      child: SingleChildScrollView(
-                        child: Column(
-                          children: dummyEbikeList.map((e) => EbikeCard(ebike: e)).toList(),
-                        ),
+                      child: StreamBuilder(
+                        stream: ebikeCollection.snapshots(),
+                        builder: (context, snapshot) {
+                          if (!snapshot.hasData) {
+                            return const Center(
+                              child: CircularProgressIndicator(),
+                            );
+                          } else {
+                            return ListView.builder(
+                              itemCount: snapshot.data!.docs.length,
+                              itemBuilder: (context, index) {
+                                final ebike = Ebike.fromSnapshot(snapshot.data!.docs[index]);
+                                return EbikeCard(ebike: ebike);
+                              },
+                            );
+                          }
+                        },
                       ),
                     ),
                   ),
