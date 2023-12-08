@@ -43,9 +43,9 @@ class ActionButton extends StatelessWidget {
         ),
         const SizedBox(height: 8),
         (labelText != null)
-            ? const Text(
-                'Camera',
-                style: TextStyle(fontWeight: FontWeight.bold),
+            ? Text(
+                labelText!,
+                style: const TextStyle(fontWeight: FontWeight.bold),
               )
             : const SizedBox(),
       ],

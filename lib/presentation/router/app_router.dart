@@ -18,13 +18,17 @@ class AppRouter {
           builder: (_) => const HomePage(),
         );
       case ManagementVehiclePage.routeName:
-        final ebike = settings.arguments as Ebike;
+        final args = settings.arguments as ManagementVehiclePageArguments;
         return MaterialPageRoute(
-          builder: (_) => ManagementVehiclePage(ebike: ebike),
+          builder: (_) => ManagementVehiclePage(
+            ebike: args.ebike,
+            ktm: args.ktm,
+          ),
         );
       case ScanPage.routeName:
+        final ebike = settings.arguments as Ebike;
         return MaterialPageRoute(
-          builder: (_) => const ScanPage(),
+          builder: (_) => ScanPage(ebike: ebike),
         );
       default:
         return MaterialPageRoute(

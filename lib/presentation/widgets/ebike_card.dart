@@ -32,7 +32,7 @@ class EbikeCard extends StatelessWidget {
           onTap: () {
             Navigator.of(context).pushNamed(
               ManagementVehiclePage.routeName,
-              arguments: ebike,
+              arguments: ManagementVehiclePageArguments(ebike: ebike),
             );
           },
           child: Row(

@@ -1,18 +1,32 @@
+import 'package:e_bike_pl/presentation/pages/home_page.dart';
 import 'package:e_bike_pl/presentation/pages/scan_page.dart';
 import 'package:e_bike_pl/presentation/theme/theme_constants.dart';
 import 'package:flutter/material.dart';
 
 import '../../logic/models/Ebike.dart';
+import '../../logic/models/KTM.dart';
+import '../widgets/custom_text_field.dart';
 
 class ManagementVehiclePage extends StatelessWidget {
   final Ebike ebike;
+  final KTM? ktm;
 
   static const routeName = '/managementVehicle';
 
-  const ManagementVehiclePage({super.key, required this.ebike});
+  const ManagementVehiclePage({super.key, required this.ebike, this.ktm});
+
+  void onSubmit(BuildContext context) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text('Data berhasil disimpan'),
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
+    final formKey = GlobalKey<FormState>();
+
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
@@ -24,58 +38,86 @@ class ManagementVehiclePage extends StatelessWidget {
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(8.0),
-          child: Column(
-            children: [
-              CustomTextField(
-                label: 'Nama E-Bike',
-                readOnly: true,
-                initialValue: ebike.name,
-              ),
-              CustomTextField(
-                label: 'Status',
-                readOnly: true,
-                initialValue: ebike.isAvailable ? 'Tersedia' : 'Digunakan',
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  const Text(
-                    'Data KTM',
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 18,
-                    ),
-                  ),
-                  ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: ThemeConstants.primaryBlue,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8),
+          child: Form(
+            key: formKey,
+            canPop: false,
+            onPopInvoked: (_) {
+              Navigator.of(context).pushNamedAndRemoveUntil(HomePage.routeName, (route) => false);
+            },
+            child: Column(
+              children: [
+                CustomTextField(
+                  label: 'Nama E-Bike',
+                  readOnly: true,
+                  initialValue: ebike.name,
+                ),
+                CustomTextField(
+                  label: 'Status',
+                  readOnly: true,
+                  initialValue: ebike.isAvailable ? 'Tersedia' : 'Digunakan',
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const Text(
+                      'Data KTM',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 18,
                       ),
                     ),
-                    onPressed: () {
-                      Navigator.of(context).pushNamed(ScanPage.routeName);
-                    },
-                    child: const Text(
-                      'Scan KTM',
-                      style: TextStyle(color: ThemeConstants.primaryWhite),
+                    ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: ThemeConstants.primaryBlue,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                      ),
+                      onPressed: () {
+                        Navigator.of(context).pushNamed(
+                          ScanPage.routeName,
+                          arguments: ebike,
+                        );
+                      },
+                      child: const Text(
+                        'Scan KTM',
+                        style: TextStyle(color: ThemeConstants.primaryWhite),
+                      ),
                     ),
+                  ],
+                ),
+                CustomTextField(
+                  label: 'NIM',
+                  hintText: 'Ex: 2141720116',
+                  initialValue: ktm?.nim ?? '',
+                ),
+                CustomTextField(
+                  label: 'Nama',
+                  hintText: 'Ex: Tony',
+                  initialValue: ktm?.nama ?? '',
+                ),
+                CustomTextField(
+                  label: 'Prodi',
+                  hintText: 'Ex: D-IV Teknik Informatika',
+                  initialValue: ktm?.jurusan ?? '',
+                ),
+                const SizedBox(height: 32),
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: ThemeConstants.primaryBlue,
+                    minimumSize: const Size(double.infinity, 48),
                   ),
-                ],
-              ),
-              const CustomTextField(
-                label: 'NIM',
-                hintText: 'Ex: 2141720116',
-              ),
-              const CustomTextField(
-                label: 'Nama',
-                hintText: 'Ex: Tony',
-              ),
-              const CustomTextField(
-                label: 'Prodi',
-                hintText: 'Ex: D-IV Teknik Informatika',
-              ),
-            ],
+                  onPressed: () {
+                    if (!formKey.currentState!.validate()) return;
+                    onSubmit(context);
+                  },
+                  child: Text(
+                    (ebike.isAvailable) ? 'Pinjam' : 'Kembalikan',
+                    style: const TextStyle(color: ThemeConstants.primaryWhite),
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),
@@ -83,44 +125,10 @@ class ManagementVehiclePage extends StatelessWidget {
   }
 }
 
-class CustomTextField extends StatelessWidget {
-  final String label;
-  final String initialValue;
-  final bool readOnly;
-  final String hintText;
+/// Arguments holder class for ManageVehiclePage - contains [ebike] and [ktm]
+class ManagementVehiclePageArguments {
+  final Ebike ebike;
+  final KTM? ktm;
 
-  const CustomTextField({
-    super.key,
-    required this.label,
-    this.hintText = '',
-    this.initialValue = '',
-    this.readOnly = false,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.symmetric(vertical: 8),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            label,
-            style: const TextStyle(fontWeight: FontWeight.bold),
-          ),
-          const SizedBox(height: 8),
-          TextFormField(
-            initialValue: initialValue,
-            readOnly: readOnly,
-            decoration: InputDecoration(
-              hintText: hintText,
-              border: const OutlineInputBorder(
-                borderRadius: BorderRadius.all(Radius.circular(16)),
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
+  const ManagementVehiclePageArguments({required this.ebike, this.ktm});
 }

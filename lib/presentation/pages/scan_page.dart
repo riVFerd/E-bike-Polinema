@@ -1,6 +1,8 @@
 import 'dart:io';
 
 import 'package:dio/dio.dart';
+import 'package:e_bike_pl/logic/models/Ebike.dart';
+import 'package:e_bike_pl/presentation/pages/management_vehicle_page.dart';
 import 'package:e_bike_pl/presentation/theme/theme_constants.dart';
 import 'package:e_bike_pl/presentation/widgets/action_button.dart';
 import 'package:flutter/material.dart';
@@ -10,7 +12,9 @@ import 'package:image_picker/image_picker.dart';
 import '../../logic/models/KTM.dart';
 
 class ScanPage extends StatefulWidget {
-  const ScanPage({super.key});
+  final Ebike ebike;
+
+  const ScanPage({super.key, required this.ebike});
 
   static const routeName = '/scan';
 
@@ -46,10 +50,10 @@ class _ScanPageState extends State<ScanPage> {
     });
     final ktm = await KTM.getDataByUploadImage(imageFile!.path, '/ocr_ktm', dio);
     if (ktm != null) {
-      // Navigator.of(context).pushNamed(
-      //   KTMReviewPage.routeName,
-      //   arguments: ktm,
-      // );
+      Navigator.of(context).pushNamed(
+        ManagementVehiclePage.routeName,
+        arguments: ManagementVehiclePageArguments(ebike: widget.ebike, ktm: ktm),
+      );
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
@@ -123,6 +127,17 @@ class _ScanPageState extends State<ScanPage> {
                             pickImage(ImageSource.camera);
                           },
                         ),
+                        ElevatedButton(
+                          onPressed: () async {
+                            final statusCode = await pingServer(dio);
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text('Server responded with status code: $statusCode'),
+                              ),
+                            );
+                          },
+                          child: const Text('Ping Server'),
+                        ),
                         ActionButton(
                           iconData: Icons.photo,
                           labelText: 'Gallery',
@@ -130,25 +145,16 @@ class _ScanPageState extends State<ScanPage> {
                             pickImage(ImageSource.gallery);
                           },
                         ),
-                        // ElevatedButton(
-                        //   onPressed: () async {
-                        //     final statusCode = await pingServer(dio);
-                        //     ScaffoldMessenger.of(context).showSnackBar(
-                        //       SnackBar(
-                        //         content: Text('Server responded with status code: $statusCode'),
-                        //       ),
-                        //     );
-                        //   },
-                        //   child: const Text('Ping Server'),
-                        // ),
                       ],
                     ),
                   ),
                   Center(
                     child: ElevatedButton(
-                      onPressed: () async {
-                        await sendImage(dio);
-                      },
+                      onPressed: (imageFile == null)
+                          ? null
+                          : () async {
+                              await sendImage(dio);
+                            },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: ThemeConstants.primaryBlue,
                       ),
