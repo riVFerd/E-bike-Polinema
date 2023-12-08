@@ -81,11 +81,11 @@ class _ScanPageState extends State<ScanPage> {
           centerTitle: true,
           title: const Text('Scan KTM'),
         ),
-        body: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Stack(
-            children: [
-              Column(
+        body: Stack(
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(16),
+              child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const Text(
@@ -172,16 +172,30 @@ class _ScanPageState extends State<ScanPage> {
                   ),
                 ],
               ),
-              (isLoading)
-                  ? Container(
-                      color: Colors.black.withOpacity(0.5),
-                      child: const Center(
-                        child: CircularProgressIndicator(),
+            ),
+            (isLoading)
+                ? Container(
+                    color: Colors.black.withOpacity(0.5),
+                    child: const Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          CircularProgressIndicator(),
+                          SizedBox(height: 16),
+                          Text(
+                            'Scanning KTM',
+                            style: TextStyle(
+                              fontWeight: FontWeight.w900,
+                              fontSize: 18,
+                              color: ThemeConstants.primaryWhite,
+                            ),
+                          )
+                        ],
                       ),
-                    )
-                  : const SizedBox.shrink(),
-            ],
-          ),
+                    ),
+                  )
+                : const SizedBox.shrink(),
+          ],
         ),
       ),
     );

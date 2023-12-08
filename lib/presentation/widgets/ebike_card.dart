@@ -2,6 +2,8 @@ import 'package:e_bike_pl/presentation/pages/management_vehicle_page.dart';
 import 'package:flutter/material.dart';
 
 import '../../logic/models/Ebike.dart';
+import '../../logic/models/History.dart';
+import '../../logic/models/KTM.dart';
 import '../theme/theme_constants.dart';
 
 class EbikeCard extends StatelessWidget {
@@ -29,10 +31,18 @@ class EbikeCard extends StatelessWidget {
       child: Material(
         color: Colors.transparent,
         child: InkWell(
-          onTap: () {
+          onTap: () async {
+            ManagementVehiclePageArguments args = ManagementVehiclePageArguments(ebike: ebike);
+            if (!ebike.isAvailable) {
+              final history = await History.getDataByEbikeId(ebike.id);
+              if (history != null) {
+                final ktm = await KTM.getDataById(history.ktmId);
+                args = ManagementVehiclePageArguments(ebike: ebike, ktm: ktm);
+              }
+            }
             Navigator.of(context).pushNamed(
               ManagementVehiclePage.routeName,
-              arguments: ManagementVehiclePageArguments(ebike: ebike),
+              arguments: args,
             );
           },
           child: Row(

@@ -34,4 +34,22 @@ class Ebike {
       'isAvailable': isAvailable,
     };
   }
+
+  /// Get instance of [Ebike] with all properties set from this [Ebike] instance
+  Ebike copyWith({
+    String? id,
+    String? name,
+    bool? isAvailable,
+  }) {
+    return Ebike(
+      id: id ?? this.id,
+      name: name ?? this.name,
+      isAvailable: isAvailable ?? this.isAvailable,
+    );
+  }
+
+  /// Update existing [Ebike] in Firestore
+  Future<void> update() async {
+    await FirebaseFirestore.instance.collection('ebike').doc(id).set(toJson());
+  }
 }

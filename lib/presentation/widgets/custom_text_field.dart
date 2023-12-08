@@ -5,6 +5,7 @@ class CustomTextField extends StatelessWidget {
   final String initialValue;
   final bool readOnly;
   final String hintText;
+  final void Function(String)? onChanged;
 
   const CustomTextField({
     super.key,
@@ -12,6 +13,7 @@ class CustomTextField extends StatelessWidget {
     this.hintText = '',
     this.initialValue = '',
     this.readOnly = false,
+    this.onChanged,
   });
 
   @override
@@ -27,6 +29,7 @@ class CustomTextField extends StatelessWidget {
           ),
           const SizedBox(height: 8),
           TextFormField(
+            onChanged: onChanged,
             initialValue: initialValue,
             readOnly: readOnly,
             validator: (value) {
