@@ -52,4 +52,14 @@ class Ebike {
   Future<void> update() async {
     await FirebaseFirestore.instance.collection('ebike').doc(id).set(toJson());
   }
+
+  /// Get [Ebike] from Firestore by id
+  static Future<Ebike?> getById(String id) async {
+    final ebikeSnapshot = await FirebaseFirestore.instance.collection('ebike').doc(id).get();
+    if (ebikeSnapshot.exists) {
+      return Ebike.fromSnapshot(ebikeSnapshot);
+    } else {
+      return null;
+    }
+  }
 }

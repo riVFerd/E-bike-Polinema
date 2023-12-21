@@ -98,6 +98,15 @@ class History {
     }
   }
 
+  /// Get all data [History] from Firestore
+  static Future<List<History>> getAllData() async {
+    final historySnapshot = await FirebaseFirestore.instance
+        .collection('history')
+        .orderBy('date_start', descending: true)
+        .get();
+    return historySnapshot.docs.map((e) => History.fromSnapshot(e)).toList();
+  }
+
   /// Save this [History] as new data to Firestore
   Future<void> create() async {
     final documentRef = await FirebaseFirestore.instance.collection('history').add(toJson());
