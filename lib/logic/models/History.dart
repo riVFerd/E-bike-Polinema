@@ -102,7 +102,8 @@ class History {
   static Future<List<History>> getAllData() async {
     final historySnapshot = await FirebaseFirestore.instance
         .collection('history')
-        .orderBy('date_start', descending: true)
+        .orderBy('isDone')
+        .orderBy('date_end', descending: true)
         .get();
     return historySnapshot.docs.map((e) => History.fromSnapshot(e)).toList();
   }
