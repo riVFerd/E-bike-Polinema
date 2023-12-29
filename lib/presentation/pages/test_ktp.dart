@@ -44,12 +44,25 @@ class _TestKTPState extends State<TestKTP> {
     setState(() {
       isLoading = true;
     });
-    final ktm = await KTM.getDataByUploadImage(imageFile!.path, '/ocr_ktp', dio);
-    if (ktm != null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Data berhasil disimpan'),
-        ),
+    final result = await KTM.getTextByOCR(imageFile!.path, '/ocr_ktp', dio);
+    if (result != null) {
+      // display all text on bottom sheet
+      showModalBottomSheet(
+        context: context,
+        builder: (context) {
+          return Container(
+            alignment: Alignment.center,
+            height: 300,
+            child: SingleChildScrollView(
+              child: Center(
+                child: Text(
+                  result,
+                  textAlign: TextAlign.center,
+                ),
+              ),
+            ),
+          );
+        },
       );
     } else {
       ScaffoldMessenger.of(context).showSnackBar(

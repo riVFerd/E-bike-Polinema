@@ -99,6 +99,23 @@ class KTM {
     return KTM.fromJson(response.data as Map<String, dynamic>);
   }
 
+  static Future<String?> getTextByOCR(String filePath, String url, Dio dio) async {
+    String fileName = filePath.split('/').last;
+    FormData formData = FormData.fromMap({
+      'image': await MultipartFile.fromFile(filePath, filename: fileName),
+    });
+    late Response response;
+    try {
+      response = await dio.post(
+        url,
+        data: formData,
+      );
+    } on DioException catch (_) {
+      return null;
+    }
+    return (response.data as Map<String, dynamic>).toString();
+  }
+
   /// Get data from Firestore by [KTM.id]
   static Future<KTM?> getDataById(String id) async {
     final ktmSnapshot = await FirebaseFirestore.instance.collection('KTM').doc(id).get();
